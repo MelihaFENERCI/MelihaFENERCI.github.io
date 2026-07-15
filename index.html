@@ -3,95 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oktay Tunalı - CV</title>
+    <title>Meliha Fenerci - CV</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary: #9c1c34; /* Bordomsu şık bir kırmızı */
+            --secondary: #2c3e50;
+            --light: #f4f7f6;
+            --text-dark: #333;
+            --text-light: #666;
+            --white: #ffffff;
+            --shadow: 0 5px 15px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+        }
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: var(--light);
+            color: var(--text-dark);
+            line-height: 1.6;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+            padding: 40px 20px;
         }
-        .cv-card {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 500px;
+
+        .container {
+            max-width: 1100px;
             width: 100%;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sol Panel (Sidebar) */
+        .sidebar {
+            width: 35%;
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profile-section {
             text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
         }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 5px;
-            font-size: 24px;
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: var(--transition);
         }
-        h2 {
-            color: #16a085;
+
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+
+        .name {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .job-title {
+            color: var(--primary);
             font-size: 16px;
             font-weight: 500;
-            margin-bottom: 20px;
+            margin-top: 5px;
         }
-        p {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 20px;
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .btn {
-            background-color: #16a085;
-            color: white;
-            border: none;
-            padding: 10px 20px;
+
+        .contact-list, .skills-list, .cert-list {
+            list-style: none;
+        }
+
+        .contact-list li {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
             font-size: 14px;
+        }
+
+        .contact-list i {
+            color: var(--primary);
+            font-size: 18px;
+            margin-top: 3px;
+        }
+
+        .contact-list a {
+            color: var(--white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-list a:hover {
+            color: var(--primary);
+        }
+
+        .skills-list li, .cert-list li {
+            margin-bottom: 10px;
+            font-size: 13.5px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .skills-list li::before, .cert-list li::before {
+            content: '•';
+            color: var(--primary);
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: -4px;
+        }
+
+        .cert-list span {
+            display: block;
+            font-size: 11px;
+            color: #aaa;
+        }
+
+        /* Sağ Panel (Main Content) */
+        .main-content {
+            width: 65%;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light);
+            display: inline-block;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary);
+        }
+
+        .about-text {
+            color: var(--text-light);
+            font-size: 15px;
+            text-align: justify;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 2px;
+            background-color: #e0e0e0;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover {
+            transform: translateX(5px);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 17px;
+            color: var(--secondary);
+        }
+
+        .item-subtitle {
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .item-desc {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+        
+        .item-desc ul {
+            padding-left: 15px;
+            margin-top: 5px;
+        }
+
+        /* Tooltip & Interactivity */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 140px;
+            background-color: var(--primary);
+            color: #fff;
+            text-align: center;
             border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.2s;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -70px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
         }
-        .btn:hover {
-            background-color: #11806a;
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
-        #alert-box {
-            margin-top: 15px;
-            font-size: 13px;
-            color: #27ae60;
-            font-weight: bold;
-            height: 20px;
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 30px;
+            }
+            .main-content {
+                width: 100%;
+                padding: 30px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="cv-card">
-        <h1>Oktay Tunalı</h1>
-        <h2>Full Stack Developer & Software Specialist</h2>
-        <p>
-            Backend, frontend ve veritabanı teknolojilerinde uzmanlaşmış, ölçeklenebilir ve güvenli web uygulamaları geliştiren yazılım uzmanı.
-        </p>
-        
-        <button class="btn" onclick="showContact()">İletişim Bilgilerini Göster</button>
-        <div id="alert-box"></div>
+    <div class="container">
+        <!-- Sol Panel -->
+        <aside class="sidebar">
+            <div class="profile-section">
+                <!-- Fotoğraf adını buradan değiştir -->
+                <img src="vesikalik.jpg" alt="Meliha Fenerci" class="profile-img" onerror="this.src='https://via.placeholder.com/180x180?text=Fotoğraf'">
+                <h1 class="name">Meliha Fenerci</h1>
+                <p class="job-title">Çocuk Gelişim Uzmanı</p>
+            </div>
+
+            <div class="contact-section">
+                <h2 class="sidebar-title"><i class="fa-solid fa-address-card"></i> İletişim</h2>
+                <ul class="contact-list">
+                    <li>
+                        <i class="fa-solid fa-phone tooltip"></i>
+                        <div>
+                            <a href="tel:+905319073828" class="tooltip">0531 907 38 28
+                                <span class="tooltiptext">Tıkla ve Ara</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-envelope"></i>
+                        <div>
+                            <a href="mailto:melihackrl36@gmail.com" class="tooltip">melihackrl36@gmail.com
+                                <span class="tooltiptext">E-posta Gönder</span>
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-location-dot"></i>
+                        <div>Sultangazi / İSTANBUL</div>
+                    </li>
+                    <li>
+                        <i class="fa-brands fa-linkedin"></i>
+                        <div>
+                            <a href="https://www.linkedin.com/in/meliha-fenerci-258181381/" target="_blank" class="tooltip">LinkedIn Profili
+                                <span class="tooltiptext">Yeni Sekmede Aç</span>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skills-section">
+                <h2 class="sidebar-title"><i class="fa-solid fa-star"></i> Yetenekler</h2>
+                <ul class="skills-list">
+                    <li>BEP Tasarımı & Uygulama</li>
+                    <li>Kaynaştırma Eğitimi</li>
+                    <li>MEB Müfredat Entegrasyonu</li>
+                    <li>Bütünleştirilmiş Etkinlik</li>
+                    <li>Çok Yönlü Gelişim Takibi</li>
+                    <li>Pedagojik Gözlem ve Raporlama</li>
+                    <li>Yaratıcı Drama Liderliği</li>
+                    <li>Eğitici Materyal Geliştirme</li>
+                    <li>Müzik, Hareket ve Ritim Eğitimi</li>
+                </ul>
+            </div>
+
+            <div class="cert-section">
+                <h2 class="sidebar-title"><i class="fa-solid fa-certificate"></i> Sertifikalar</h2>
+                <ul class="cert-list">
+                    <li>Tuvalet Eğitimi <span>B&S Psikoloji, 07/2026</span></li>
+                    <li>Bebeklerde Uyku Danışmanlığı <span>B&S Psikoloji, 07/2026</span></li>
+                    <li>Müzik ve Hareket Eğitimi <span>BOMED, 12/2024</span></li>
+                    <li>Drama ve Oyun Uygulamaları <span>Yaşım Çocuk, 06/2024</span></li>
+                    <li>Bedenden Oyuna Müzik Eğitimi <span>BOMED, 05/2024</span></li>
+                    <li>Etkinlik Teşekkür Belgesi <span>İl Halk Kütüphanesi, 06/2024</span></li>
+                </ul>
+            </div>
+
+            <div class="lang-section">
+                <h2 class="sidebar-title"><i class="fa-solid fa-language"></i> Yabancı Dil</h2>
+                <ul class="skills-list">
+                    <li>Türkçe - C2 (Ana Dil)</li>
+                    <li>İngilizce - B2 (Orta Üst Seviye)</li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Sağ Panel -->
+        <main class="main-content">
+            <section>
+                <h2 class="section-title">Hakkımda</h2>
+                <p class="about-text">
+                    Çocukların dünyasını anlamayı ve onların potansiyellerini sevgiyle ortaya çıkarmayı hayat amacı edinmiş bir Çocuk Gelişimciyim. 3.19 GANO ile tamamladığım üniversite eğitimimi; özel eğitim, anaokulu stajları ve gönüllü projelerle destekleyerek güçlü bir saha tecrübesi kazandım. BEP hazırlama ve oyun temelli etkinlik planlama süreçlerinde esnek, kapsayıcı ve en önemlisi çocuğun üstün yararını gözeten bir yaklaşımı benimsiyorum. Minik kalplerin büyük yolculuğuna bilimle ve neşeyle eşlik etmeye hazırım.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="section-title">İş Deneyimi</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="item-title">Stajyer Çocuk Gelişimci</div>
+                        <div class="item-subtitle">Özel Açem Rehabilitasyon Merkezi | Ekim 2025 - Haziran 2026</div>
+                        <div class="item-desc">
+                            <ul>
+                                <li>Özel gereksinimli öğrencilerin seanslarına katılıp vaka gözlemleri ve rutin gelişim takipleri yaptım.</li>
+                                <li>BEP doğrultusunda kişiselleştirilmiş materyaller tasarlayıp gelişim raporları sundum.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="item-title">Yaz Stajyeri</div>
+                        <div class="item-subtitle">İpekyolu Özel Eğitim ve Rehabilitasyon | Temmuz 2025 - Ağustos 2025</div>
+                        <div class="item-desc">
+                            <ul>
+                                <li>Çocukların çok yönlü gelişimsel ihtiyaçları için tam zamanlı saha uygulamaları yürüttüm.</li>
+                                <li>Uzman kadroya destek sağlayıp ihtiyaca yönelik özel materyaller geliştirdim.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="item-title">Stajyer Çocuk Gelişimci</div>
+                        <div class="item-subtitle">Yayla Ayçiçeği Anaokulu | Ekim 2024 - Haziran 2025</div>
+                        <div class="item-desc">
+                            <ul>
+                                <li>MEB müfredatına uygun "Bütünleştirilmiş Etkinlik" planları hazırlayıp sınıf içi uygulamaları yönettim.</li>
+                                <li>Haftalık gelişim gözlem raporları oluşturarak çocukların öz bakım süreçlerine destek oldum.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="item-title">Stajyer Çocuk Gelişimci</div>
+                        <div class="item-subtitle">Atatürk Ortaokulu Destek Sınıfı | Ekim 2024 - Haziran 2025</div>
+                        <div class="item-desc">
+                            <ul>
+                                <li>Kaynaştırma eğitimindeki öğrenciler için sınıf içi eğitsel destek ve özel etkinlikler uyguladım.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Eğitim</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="item-title">Çocuk Gelişimi (Lisans)</div>
+                        <div class="item-subtitle">Kırklareli Üniversitesi - Sağlık Bilimleri Fakültesi | 2022 - 2026</div>
+                        <div class="item-desc">GANO: 3.19</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Gönüllülük ve Projeler</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="item-desc">
+                            <ul>
+                                <li><strong>Yaşım Çocuk Kulübü (Yönetim Ekibi Üyesi):</strong> Sosyal ve eğitsel projelerin koordinasyonu (1 Yıl).</li>
+                                <li><strong>UNIDES Mutluluk Haritası Projesi:</strong> Köy okullarındaki dezavantajlı çocuklar için pedagojik etkinlikler.</li>
+                                <li><strong>Çocuk Esirgeme Kurumu (ÇEK):</strong> Koruma altındaki çocuklara yönelik gönüllü drama ve oyun atölyeleri.</li>
+                                <li><strong>Sosyal Etkinlikler:</strong> 23 Nisan, Otizm Farkındalık Haftası, Kakava Şenlikleri, okul açılışları vb. yerlerde stant görevlisi ve koordinatör.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
+    <!-- Etkileşim efektleri için hafif JavaScript -->
     <script>
-        function showContact() {
-            const alertBox = document.getElementById('alert-box');
-            alertBox.innerHTML = "📧 E-posta adresi ve iletişim detayları yakında burada olacak!";
-            
-            // 3 saniye sonra mesajı temizle
-            setTimeout(() => {
-                alertBox.innerHTML = "";
-            }, 3000);
-        }
+        document.querySelectorAll('.contact-list a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Etkileşim animasyonu
+                this.style.opacity = '0.5';
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                }, 200);
+            });
+        });
     </script>
-
 </body>
 </html>
