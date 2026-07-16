@@ -143,8 +143,6 @@
             margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(108, 52, 131, 0.4);
             transition: var(--transition);
-            transform-style: preserve-3d;
-            backface-visibility: hidden;
         }
 
         .profile-img:hover {
@@ -317,8 +315,6 @@
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             transition: transform 0.1s ease, box-shadow 0.3s ease;
-            transform-style: preserve-3d;
-            perspective: 1000px;
         }
 
         .timeline-item:hover {
@@ -392,44 +388,6 @@
             opacity: 1;
         }
 
-        /* Premium Özellikler: Özel İmleç (Sadece Masaüstü İçin) */
-        @media (hover: hover) and (pointer: fine) {
-            body {
-                cursor: none;
-            }
-            a, button, .timeline-item, .profile-img, .skills-list li, .cert-list li {
-                cursor: none !important;
-            }
-            .custom-cursor {
-                width: 20px;
-                height: 20px;
-                border: 2px solid var(--primary);
-                border-radius: 50%;
-                position: fixed;
-                transform: translate(-50%, -50%);
-                pointer-events: none;
-                z-index: 99999;
-                transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
-                box-shadow: 0 0 10px rgba(108, 52, 131, 0.4);
-            }
-            .custom-cursor-dot {
-                width: 4px;
-                height: 4px;
-                background-color: var(--primary);
-                border-radius: 50%;
-                position: fixed;
-                transform: translate(-50%, -50%);
-                pointer-events: none;
-                z-index: 99999;
-            }
-            .custom-cursor.hovered {
-                width: 45px;
-                height: 45px;
-                background-color: rgba(108, 52, 131, 0.15);
-                border-color: #e056fd;
-            }
-        }
-
         /* Premium Özellikler: Kaydırdıkça Büyüyen Çocuk Figürü */
         .scroll-child-container {
             position: fixed;
@@ -453,6 +411,34 @@
             transition: transform 0.1s ease-out;
         }
 
+        /* Sol Üst Gökkuşağı ve Bulut */
+        .rainbow-cloud-wrapper {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 160px;
+            height: 100px;
+            z-index: 1000;
+            pointer-events: none;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+        }
+
+        .cloud-svg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 75px;
+            z-index: 2;
+        }
+
+        .rainbow-svg {
+            position: absolute;
+            bottom: 12px;
+            left: 30px;
+            width: 120px;
+            z-index: 1;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .container {
@@ -473,6 +459,12 @@
                 width: 60px;
                 height: 60px;
             }
+            .rainbow-cloud-wrapper {
+                top: 10px;
+                left: 10px;
+                transform: scale(0.6);
+                transform-origin: top left;
+            }
         }
     </style>
 </head>
@@ -481,9 +473,25 @@
     <!-- İnteraktif Arka Plan Canvası -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Özel İmleç Elementleri -->
-    <div class="custom-cursor"></div>
-    <div class="custom-cursor-dot"></div>
+    <!-- Sol Üst Gökkuşağı Animasyonu -->
+    <div class="rainbow-cloud-wrapper">
+        <svg class="rainbow-svg" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+            <clipPath id="rainbow-clip">
+                <rect x="0" y="0" width="0" height="60" class="rainbow-mask"/>
+            </clipPath>
+            <g clip-path="url(#rainbow-clip)">
+                <path d="M 10 60 A 50 50 0 0 1 110 60" fill="none" stroke="#ff4136" stroke-width="4"/>
+                <path d="M 14 60 A 46 46 0 0 1 106 60" fill="none" stroke="#ff851b" stroke-width="4"/>
+                <path d="M 18 60 A 42 42 0 0 1 102 60" fill="none" stroke="#ffdc00" stroke-width="4"/>
+                <path d="M 22 60 A 38 38 0 0 1 98 60" fill="none" stroke="#2ecc40" stroke-width="4"/>
+                <path d="M 26 60 A 34 34 0 0 1 94 60" fill="none" stroke="#0074d9" stroke-width="4"/>
+                <path d="M 30 60 A 30 30 0 0 1 90 60" fill="none" stroke="#b10dc9" stroke-width="4"/>
+            </g>
+        </svg>
+        <svg class="cloud-svg" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 15 35 Q 5 35 5 25 Q 5 15 15 15 Q 20 5 35 5 Q 50 5 50 15 Q 55 15 55 25 Q 55 35 45 35 Z" fill="#ffffff" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.15))"/>
+        </svg>
+    </div>
 
     <!-- Kaydırdıkça Etkileşime Giren Çocuk Figürü (SVG) -->
     <div class="scroll-child-container">
@@ -704,10 +712,10 @@
 
         const bubbles = [];
         const colors = [
-            'rgba(108, 52, 131, 0.15)', // Şık Mürdüm
-            'rgba(155, 89, 182, 0.12)', // Parlak Leylak
-            'rgba(224, 86, 253, 0.12)', // Soft Pembe/Mor
-            'rgba(162, 155, 254, 0.1)'  // Tatlı Pastel Mavi
+            'rgba(108, 52, 131, 0.15)',
+            'rgba(155, 89, 182, 0.12)',
+            'rgba(224, 86, 253, 0.12)',
+            'rgba(162, 155, 254, 0.1)'
         ];
 
         class Bubble {
@@ -751,7 +759,6 @@
         function animateBg() {
             ctx.clearRect(0, 0, width, height);
             bubbles.forEach(bubble => {
-                // Hafif mouse itme kuvveti
                 const dx = mouseX - bubble.x;
                 const dy = mouseY - bubble.y;
                 const dist = Math.hypot(dx, dy);
@@ -805,9 +812,7 @@
             if (totalScroll <= 0) return;
             const scrollPercent = window.scrollY / totalScroll;
 
-            // Çocuk figürü %50'den %140 boyutuna doğru büyüsün
             const scaleVal = 0.5 + (scrollPercent * 0.9);
-            // Aşağı indikçe keyifli ve ritmik bir sallantı (yürüme hissi)
             const rotateVal = Math.sin(window.scrollY * 0.04) * 6;
 
             childSvg.style.transform = `scale(${scaleVal}) rotate(${rotateVal}deg)`;
@@ -816,58 +821,22 @@
         lenis.on('scroll', handleScrollChild);
 
 
-        // --- 5. PREMIUM ÖZEL İMLEÇ (Custom Cursor) ---
-        const cursor = document.querySelector('.custom-cursor');
-        const cursorDot = document.querySelector('.custom-cursor-dot');
-        let cursorX = 0, cursorY = 0;
-        let currentX = 0, currentY = 0;
-
-        window.addEventListener('mousemove', (e) => {
-            cursorX = e.clientX;
-            cursorY = e.clientY;
-            cursorDot.style.left = `${cursorX}px`;
-            cursorDot.style.top = `${cursorY}px`;
-        });
-
-        function updateCursor() {
-            // Yumuşak takip etkisi (lerp)
-            currentX += (cursorX - currentX) * 0.12;
-            currentY += (cursorY - currentY) * 0.12;
-            cursor.style.left = `${currentX}px`;
-            cursor.style.top = `${currentY}px`;
-            requestAnimationFrame(updateCursor);
+        // --- 5. GÖKKUŞAĞI ANİMASYONU ---
+        const rainbowMask = document.querySelector('.rainbow-mask');
+        function handleRainbowScroll() {
+            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+            if (totalScroll <= 0) return;
+            const scrollPercent = window.scrollY / totalScroll;
+            
+            // Maske genişliğini scroll oranına göre artırıyoruz
+            const maskWidth = scrollPercent * 120;
+            rainbowMask.setAttribute('width', maskWidth);
         }
-        requestAnimationFrame(updateCursor);
-
-        // Hover Efektleri İçin Sınıf Ekleme
-        document.querySelectorAll('a, button, .timeline-item, .profile-img, .skills-list li, .cert-list li').forEach(item => {
-            item.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
-            item.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
-        });
+        window.addEventListener('scroll', handleRainbowScroll);
+        lenis.on('scroll', handleRainbowScroll);
 
 
-        // --- 6. 3D KART EĞİLME EFEKTİ (Tilt Effect) ---
-        const tiltElements = document.querySelectorAll('.timeline-item, .profile-img');
-        tiltElements.forEach(el => {
-            el.addEventListener('mousemove', (e) => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const xc = rect.width / 2;
-                const yc = rect.height / 2;
-                const angleX = (yc - y) / 10; // Yatay eğim derecesi
-                const angleY = (x - xc) / 10; // Dikey eğim derecesi
-
-                el.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.02)`;
-            });
-
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-            });
-        });
-
-
-        // --- 7. MIKNATIS ETKİLİ BUTONLAR (Magnetic Interaction) ---
+        // --- 6. MIKNATIS ETKİLİ BUTONLAR (Magnetic Interaction) ---
         const magneticElements = document.querySelectorAll('.contact-list li, .tooltip');
         magneticElements.forEach(item => {
             item.addEventListener('mousemove', (e) => {
@@ -875,7 +844,6 @@
                 const x = e.clientX - rect.left - rect.width / 2;
                 const y = e.clientY - rect.top - rect.height / 2;
                 
-                // Elemanı fare yönüne doğru %30 oranında çek
                 item.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
             });
 
