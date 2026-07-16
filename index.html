@@ -64,9 +64,9 @@
             --text-dark: #2a242c; /* Okunabilirliği yüksek koyu mor-gri yazı */
             --text-light: #6a6170; /* Yumuşak alt başlık yazısı */
             --white: #ffffff;
-            --shadow: 0 5px 15px rgba(108, 52, 131, 0.8); /* Mor tonlu hafif ve modern gölge */
-            --glow: 0 0 1px rgba(155, 89, 182, 0.8);
-            --transition: all 0.3s ease;
+            --shadow: 0 10px 30px rgba(108, 52, 131, 0.15); /* Modern, hafif gölge */
+            --glow: 0 0 8px rgba(155, 89, 182, 0.6);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
@@ -83,28 +83,49 @@
             display: flex;
             justify-content: center;
             padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
         }
 
+        /* İnteraktif Arka Plan Canvas */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Cam Morfolojisi ve Lüks Konteyner Görünümü */
         .container {
             max-width: 1100px;
             width: 100%;
-            background: var(--white);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
             box-shadow: var(--shadow);
             display: flex;
             overflow: hidden;
             position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            z-index: 1;
         }
 
         /* Sol Panel (Sidebar) */
         .sidebar {
             width: 35%;
-            background-color: var(--secondary);
+            background-color: rgba(44, 37, 48, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             color: var(--white);
             padding: 40px 30px;
             display: flex;
             flex-direction: column;
             gap: 30px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .profile-section {
@@ -120,22 +141,28 @@
             object-fit: cover;
             border: 4px solid var(--primary);
             margin-bottom: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(108, 52, 131, 0.4);
             transition: var(--transition);
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
         }
 
         .profile-img:hover {
-            transform: scale(1.05);
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 8px 25px rgba(155, 89, 182, 0.6);
         }
 
         .name {
             font-size: 26px;
             font-weight: 700;
             letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff, #ecd6f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .job-title {
-            color: var(--primary);
+            color: #b07cc6;
             font-size: 16px;
             font-weight: 500;
             margin-top: 5px;
@@ -148,7 +175,7 @@
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: var(--primary);
+            color: #b07cc6;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -165,12 +192,19 @@
             align-items: flex-start;
             gap: 15px;
             font-size: 14px;
+            transition: var(--transition);
         }
 
         .contact-list i {
-            color: var(--primary);
+            color: #b07cc6;
             font-size: 18px;
             margin-top: 3px;
+            transition: var(--transition);
+        }
+
+        .contact-list li:hover i {
+            transform: scale(1.2) rotate(15deg);
+            color: #e056fd;
         }
 
         .contact-list a {
@@ -180,7 +214,7 @@
         }
 
         .contact-list a:hover {
-            color: var(--primary);
+            color: #e056fd;
         }
 
         .skills-list li, .cert-list li {
@@ -188,11 +222,17 @@
             font-size: 13.5px;
             padding-left: 20px;
             position: relative;
+            transition: var(--transition);
+        }
+
+        .skills-list li:hover, .cert-list li:hover {
+            transform: translateX(5px);
+            color: #e056fd;
         }
 
         .skills-list li::before, .cert-list li::before {
             content: '•';
-            color: var(--primary);
+            color: #b07cc6;
             font-size: 20px;
             position: absolute;
             left: 0;
@@ -220,7 +260,7 @@
             color: var(--secondary);
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 2px solid var(--light);
+            border-bottom: 2px solid rgba(108, 52, 131, 0.1);
             display: inline-block;
             position: relative;
         }
@@ -241,6 +281,7 @@
             text-align: justify;
         }
 
+        /* Dinamik Çizgi Çizen Zaman Tüneli */
         .timeline {
             position: relative;
             padding-left: 30px;
@@ -253,30 +294,49 @@
             top: 0;
             height: 100%;
             width: 2px;
-            background-color: #e0e0e0;
+            background-color: rgba(108, 52, 131, 0.1);
+        }
+
+        /* Dinamik boyanan kılavuz çizgi */
+        .timeline-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 0%;
+            background: linear-gradient(to bottom, var(--primary), #e056fd);
+            transition: height 0.1s ease-out;
+            box-shadow: 0 0 8px rgba(224, 86, 253, 0.8);
         }
 
         .timeline-item {
             position: relative;
             margin-bottom: 30px;
-            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.5);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: transform 0.1s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            perspective: 1000px;
         }
 
         .timeline-item:hover {
-            transform: translateX(5px);
+            box-shadow: 0 8px 20px rgba(108, 52, 131, 0.1);
         }
 
         .timeline-item::before {
             content: '';
             position: absolute;
             left: -35px;
-            top: 5px;
+            top: 20px;
             width: 12px;
             height: 12px;
             border-radius: 50%;
             background-color: var(--primary);
             border: 3px solid var(--white);
             box-shadow: 0 0 0 2px var(--primary);
+            z-index: 2;
         }
 
         .item-title {
@@ -317,13 +377,14 @@
             border-radius: 6px;
             padding: 5px;
             position: absolute;
-            z-index: 1;
+            z-index: 10;
             bottom: 125%;
             left: 50%;
             margin-left: -70px;
             opacity: 0;
             transition: opacity 0.3s;
             font-size: 12px;
+            box-shadow: var(--glow);
         }
 
         .tooltip:hover .tooltiptext {
@@ -331,10 +392,72 @@
             opacity: 1;
         }
 
+        /* Premium Özellikler: Özel İmleç (Sadece Masaüstü İçin) */
+        @media (hover: hover) and (pointer: fine) {
+            body {
+                cursor: none;
+            }
+            a, button, .timeline-item, .profile-img, .skills-list li, .cert-list li {
+                cursor: none !important;
+            }
+            .custom-cursor {
+                width: 20px;
+                height: 20px;
+                border: 2px solid var(--primary);
+                border-radius: 50%;
+                position: fixed;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 99999;
+                transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+                box-shadow: 0 0 10px rgba(108, 52, 131, 0.4);
+            }
+            .custom-cursor-dot {
+                width: 4px;
+                height: 4px;
+                background-color: var(--primary);
+                border-radius: 50%;
+                position: fixed;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                z-index: 99999;
+            }
+            .custom-cursor.hovered {
+                width: 45px;
+                height: 45px;
+                background-color: rgba(108, 52, 131, 0.15);
+                border-color: #e056fd;
+            }
+        }
+
+        /* Premium Özellikler: Kaydırdıkça Büyüyen Çocuk Figürü */
+        .scroll-child-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 80px;
+            height: 80px;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            filter: drop-shadow(0 4px 15px rgba(108, 52, 131, 0.25));
+        }
+
+        .scroll-child-svg {
+            width: 100%;
+            height: 100%;
+            transform-origin: bottom center;
+            transform: scale(0.5);
+            transition: transform 0.1s ease-out;
+        }
+
         /* Responsive */
         @media (max-width: 900px) {
             .container {
                 flex-direction: column;
+                border-radius: 0;
             }
             .sidebar {
                 width: 100%;
@@ -344,10 +467,42 @@
                 width: 100%;
                 padding: 30px;
             }
+            .scroll-child-container {
+                bottom: 15px;
+                right: 15px;
+                width: 60px;
+                height: 60px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- İnteraktif Arka Plan Canvası -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Özel İmleç Elementleri -->
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-dot"></div>
+
+    <!-- Kaydırdıkça Etkileşime Giren Çocuk Figürü (SVG) -->
+    <div class="scroll-child-container">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" class="scroll-child-svg">
+            <!-- Parlayan Yıldız -->
+            <path d="M32 4 l1.5 4.5 l4.5 1.5 l-4.5 1.5 l-1.5 4.5 l-1.5-4.5 l-4.5-1.5 l4.5-1.5 z" fill="#f1c40f" />
+            <!-- Kafa -->
+            <circle cx="32" cy="28" r="8" fill="#6c3483"/>
+            <!-- Saç -->
+            <path d="M28 21 Q 32 16 36 21 Q 38 24 32 24 Q 26 24 28 21" fill="#2c2530" />
+            <!-- Elbise -->
+            <path d="M24 48 L 40 48 L 36 34 L 28 34 Z" fill="#9b59b6" />
+            <!-- Uzanmaya çalışan kol -->
+            <path d="M28 36 Q 20 28 22 26" stroke="#6c3483" stroke-width="3" stroke-linecap="round" fill="none" />
+            <!-- Bacaklar -->
+            <rect x="28" y="48" width="3" height="8" rx="1" fill="#6c3483" />
+            <rect x="33" y="48" width="3" height="8" rx="1" fill="#6c3483" />
+        </svg>
+    </div>
 
     <div class="container">
         <!-- Sol Panel -->
@@ -380,11 +535,7 @@
                     </li>
                     <li>
                         <i class="fa-solid fa-location-dot"></i>
-                        <div>
-                            <a href="https://share.google/KkQ2YtxgrgSSqeH2t" class="tooltip">Sultangazi / İSTANBUL
-                                <span class="tooltiptext">Adresi Gör</span>
-                            </a>
-                        </div>
+                        <div>Sultangazi / İSTANBUL</div>
                     </li>
                     <li>
                         <i class="fa-brands fa-linkedin"></i>
@@ -505,7 +656,7 @@
                         <div class="item-desc">
                             <ul>
                                 <li><strong>Yaşım Çocuk Kulübü (Yönetim Ekibi Üyesi):</strong> Sosyal ve eğitsel projelerin koordinasyonu (1 Yıl).</li>
-                                <li><strong>UNIDES Mutluluk Haritası Projesi:</strong> Köy okullarındaki dezavantajlı çocuklar için pedagojik etkinlikler.</li>
+                                <li><strong>UNIDES Mutluluk Haritası Projesi:</strong> Köy okullarındaki dezavantajlı çocuklar için pedagojik etkinliker.</li>
                                 <li><strong>Çocuk Esirgeme Kurumu (ÇEK):</strong> Koruma altındaki çocuklara yönelik gönüllü drama ve oyun atölyeleri.</li>
                                 <li><strong>Sosyal Etkinlikler:</strong> 23 Nisan, Otizm Farkındalık Haftası, Kakava Şenlikleri, okul açılışları vb. yerlerde stant görevlisi ve koordinatör.</li>
                             </ul>
@@ -516,11 +667,227 @@
         </main>
     </div>
 
-    <!-- Etkileşim efektleri için hafif JavaScript -->
+    <!-- Lenis Smooth Scroll (Yağ Gibi Akan Akışkan Kaydırma) -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
     <script>
+        // --- 1. LENIS SMOOTH SCROLL ENTEGRASYONU ---
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            direction: 'vertical',
+            gestureDirection: 'vertical',
+            smooth: true,
+            mouseMultiplier: 1,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+
+        // --- 2. INTERAKTIF TUVAL ARKA PLANI (Soft Drift Canvas) ---
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const bubbles = [];
+        const colors = [
+            'rgba(108, 52, 131, 0.15)', // Şık Mürdüm
+            'rgba(155, 89, 182, 0.12)', // Parlak Leylak
+            'rgba(224, 86, 253, 0.12)', // Soft Pembe/Mor
+            'rgba(162, 155, 254, 0.1)'  // Tatlı Pastel Mavi
+        ];
+
+        class Bubble {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 180 + 150;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.vx = (Math.random() - 0.5) * 0.7;
+                this.vy = (Math.random() - 0.5) * 0.7;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < -this.radius) this.x = width + this.radius;
+                if (this.x > width + this.radius) this.x = -this.radius;
+                if (this.y < -this.radius) this.y = height + this.radius;
+                if (this.y > height + this.radius) this.y = -this.radius;
+            }
+            draw() {
+                ctx.beginPath();
+                let gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 7; i++) {
+            bubbles.push(new Bubble());
+        }
+
+        let mouseX = 0, mouseY = 0;
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateBg() {
+            ctx.clearRect(0, 0, width, height);
+            bubbles.forEach(bubble => {
+                // Hafif mouse itme kuvveti
+                const dx = mouseX - bubble.x;
+                const dy = mouseY - bubble.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < 350) {
+                    bubble.x -= dx * 0.0015;
+                    bubble.y -= dy * 0.0015;
+                }
+                bubble.update();
+                bubble.draw();
+            });
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
+
+
+        // --- 3. DİNAMİK ÇİZGİ ÇİZEN ZAMAN TÜNELİ ---
+        const timelines = document.querySelectorAll('.timeline');
+        timelines.forEach(timeline => {
+            const progressLine = document.createElement('div');
+            progressLine.className = 'timeline-progress';
+            timeline.appendChild(progressLine);
+        });
+
+        function updateTimelines() {
+            timelines.forEach(timeline => {
+                const progressLine = timeline.querySelector('.timeline-progress');
+                if (!progressLine) return;
+
+                const rect = timeline.getBoundingClientRect();
+                const viewHeight = window.innerHeight;
+
+                let progress = 0;
+                if (rect.top < viewHeight && rect.bottom > 0) {
+                    const totalHeight = rect.height;
+                    const passed = viewHeight - rect.top;
+                    progress = Math.min(100, Math.max(0, (passed / (viewHeight + totalHeight * 0.5)) * 100));
+                } else if (rect.bottom <= 0) {
+                    progress = 100;
+                }
+                progressLine.style.height = `${progress}%`;
+            });
+        }
+        window.addEventListener('scroll', updateTimelines);
+        lenis.on('scroll', updateTimelines);
+
+
+        // --- 4. SCROLL ETKİLİ BÜYÜYEN ÇOCUK FİGÜRÜ & ROTASYON ---
+        const childSvg = document.querySelector('.scroll-child-svg');
+        function handleScrollChild() {
+            const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+            if (totalScroll <= 0) return;
+            const scrollPercent = window.scrollY / totalScroll;
+
+            // Çocuk figürü %50'den %140 boyutuna doğru büyüsün
+            const scaleVal = 0.5 + (scrollPercent * 0.9);
+            // Aşağı indikçe keyifli ve ritmik bir sallantı (yürüme hissi)
+            const rotateVal = Math.sin(window.scrollY * 0.04) * 6;
+
+            childSvg.style.transform = `scale(${scaleVal}) rotate(${rotateVal}deg)`;
+        }
+        window.addEventListener('scroll', handleScrollChild);
+        lenis.on('scroll', handleScrollChild);
+
+
+        // --- 5. PREMIUM ÖZEL İMLEÇ (Custom Cursor) ---
+        const cursor = document.querySelector('.custom-cursor');
+        const cursorDot = document.querySelector('.custom-cursor-dot');
+        let cursorX = 0, cursorY = 0;
+        let currentX = 0, currentY = 0;
+
+        window.addEventListener('mousemove', (e) => {
+            cursorX = e.clientX;
+            cursorY = e.clientY;
+            cursorDot.style.left = `${cursorX}px`;
+            cursorDot.style.top = `${cursorY}px`;
+        });
+
+        function updateCursor() {
+            // Yumuşak takip etkisi (lerp)
+            currentX += (cursorX - currentX) * 0.12;
+            currentY += (cursorY - currentY) * 0.12;
+            cursor.style.left = `${currentX}px`;
+            cursor.style.top = `${currentY}px`;
+            requestAnimationFrame(updateCursor);
+        }
+        requestAnimationFrame(updateCursor);
+
+        // Hover Efektleri İçin Sınıf Ekleme
+        document.querySelectorAll('a, button, .timeline-item, .profile-img, .skills-list li, .cert-list li').forEach(item => {
+            item.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            item.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+
+        // --- 6. 3D KART EĞİLME EFEKTİ (Tilt Effect) ---
+        const tiltElements = document.querySelectorAll('.timeline-item, .profile-img');
+        tiltElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+                const angleX = (yc - y) / 10; // Yatay eğim derecesi
+                const angleY = (x - xc) / 10; // Dikey eğim derecesi
+
+                el.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.02)`;
+            });
+
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+            });
+        });
+
+
+        // --- 7. MIKNATIS ETKİLİ BUTONLAR (Magnetic Interaction) ---
+        const magneticElements = document.querySelectorAll('.contact-list li, .tooltip');
+        magneticElements.forEach(item => {
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // Elemanı fare yönüne doğru %30 oranında çek
+                item.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = 'translate(0px, 0px)';
+            });
+        });
+
+
+        // --- Orijinal Tıklama Animasyonu Scripti ---
         document.querySelectorAll('.contact-list a').forEach(link => {
             link.addEventListener('click', function(e) {
-                // Etkileşim animasyonu
                 this.style.opacity = '0.5';
                 setTimeout(() => {
                     this.style.opacity = '1';
