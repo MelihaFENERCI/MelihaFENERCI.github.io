@@ -1,0 +1,6 @@
+# https://melihafenerci.github.io/ Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://melihafenerci.github.io/sitemap.xml
